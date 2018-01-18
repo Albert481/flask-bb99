@@ -1,4 +1,4 @@
-{% block title %}Admin - Dashboard{% endblock %}
+{% block title %}Students{% endblock %}
 
 {% block head %}
 
@@ -28,7 +28,24 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
+    <style>
+        .center {
+            top: 50%;
+            margin: 0 auto;
+            width: 800px;
+            border: 3px solid #f9f2f4;
+        }
 
+        body {
+            padding-top: 60px;
+        }
+
+        @media (max-width: 979px) {
+            body {
+                padding-top: 0px;
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -42,7 +59,17 @@
         </div>
 
         {% if session['logged_in'] %}
-            <p>Hi</p>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="center">
+                        <form class="form-inline" method="POST" action="/students">
+                            {{ render_field(form.name, class_="form-horizontal") }}
+                            {{ render_field(form.squad, class_="form-vertical") }}
+                            <input type="submit" name="action" value="Submit" class="btn btn-info"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
         {% else %}
             <div id="page-wrapper">
                 <div class="row">
