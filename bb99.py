@@ -109,14 +109,19 @@ class RequiredIf(object):
 
 class AddStudent(Form):
     name = StringField('Enter Full Name')
-    squad = SelectField('Squad', choices=[('a', 'Alpha'), ('b', 'Bravo'), ('c', 'Charlie'), ('d', 'Delta'), ('e', 'Echo'), ('f', 'Foxtrot')])
+    squad = SelectField('Squad', choices=[('A', 'Alpha'), ('B', 'Bravo'), ('C', 'Charlie'), ('D', 'Delta'), ('E', 'Echo'), ('F', 'Foxtrot')])
     slevel = RadioField('Level', choices=[('1', 'Sec1'), ('2', 'Sec 2'), ('3', 'Sec 3'), ('4', 'Sec 4'), ('5', 'Sec 5')])
-    l1class = RadioField('Level', choices=[('1e1', '1E1'), ('1e2', '!E2'), ('1e3', '1E3'), ('1e4', '1E4'),
-                                         ('1n1', '1N1'), ('1n2', '1N2'), ('1n3', '1N3'), ('1n4', '1N4'), ('1t1', '1T1') ])
-    # l2class =
-    # l3class =
-    # l4class =
-    # l5class =
+    l1class = RadioField('Level', choices=[('1E1', '1E1'), ('1E2', '1E2'), ('1E3', '1E3'), ('1E4', '1E4'),
+                                         ('1N1', '1N1'), ('1N2', '1N2'), ('1N3', '1N3'), ('1N4', '1N4'), ('1T1', '1T1') ])
+    l2class = RadioField('Level', choices=[('2E1', '2E1'), ('2E2', '2E2'), ('2E3', '2E3'), ('2E4', '2E4'),
+                                         ('2N1', '2N1'), ('2N2', '2N2'), ('2N3', '2N3'), ('2N4', '2N4'), ('2T1', '2T1') ])
+    l3class = RadioField('Level', choices=[('3E1', '3E1'), ('2E2', '3E2'), ('3E3', '3E3'), ('3E4', '3E4'),
+                                           ('3N1', '3N1'), ('3N2', '3N2'), ('3N3', '3N3'), ('3N4', '3N4'),
+                                           ('3T1', '3T1')])
+    l4class = RadioField('Level', choices=[('4E1', '4E1'), ('4E2', '4E2'), ('4E3', '4E3'), ('4E4', '4E4'),
+                                           ('4N1', '4N1'), ('4N2', '4N2'), ('4N3', '4N3'), ('4N4', '4N4'),
+                                           ('4T1', '4T1')])
+    l5class = RadioField('Level', choices=[('5N1', '5N1'), ('5N2', '5N2')])
     submit = SubmitField('Submit')
 
 if __name__ == '__main__':
