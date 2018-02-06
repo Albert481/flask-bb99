@@ -1,8 +1,10 @@
 class Students:
-    def __init__(self, name, squad):
+    def __init__(self, name, squad, slevel, tattend):
         self.__name = name
         self.__squad = squad
-        self.__tattend = '0'
+        self.__slevel = slevel
+        self.__sclass = ''
+        self.__tattend = tattend
         # self.__location = location
         # self.__comments = comments
 
@@ -10,10 +12,12 @@ class Students:
         return self.__name
     def get_squad(self):
         return self.__squad
+    def get_level(self):
+        return self.__slevel
     def get_tattend(self):
         return self.__tattend
-    # def get_location(self):
-    #     return self.__location
+    def get_sclass(self):
+        return self.__sclass
     # def get_comments(self):
     #     return self.__comments
     # def get_trolleyid(self):

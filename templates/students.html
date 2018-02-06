@@ -57,35 +57,35 @@
             $('#l4').hide();
             $('#l5').hide();
             $('input[type="radio"]').click(function () {
-                if ($(this).attr('value') == '1') {
+                if ($(this).attr('value') == 'Sec 1') {
                     $('#l1').show();
                     $('#l2').hide();
                     $('#l3').hide();
                     $('#l4').hide();
                     $('#l5').hide();
                 }
-                else if ($(this).attr('value') == '2') {
+                else if ($(this).attr('value') == 'Sec 2') {
                     $('#l1').hide();
                     $('#l2').show();
                     $('#l3').hide();
                     $('#l4').hide();
                     $('#l5').hide();
                 }
-                else if ($(this).attr('value') == '3') {
+                else if ($(this).attr('value') == 'Sec 3') {
                     $('#l1').hide();
                     $('#l2').hide();
                     $('#l3').show();
                     $('#l4').hide();
                     $('#l5').hide();
                 }
-                else if ($(this).attr('value') == '4') {
+                else if ($(this).attr('value') == 'Sec 4') {
                     $('#l1').hide();
                     $('#l2').hide();
                     $('#l3').hide();
                     $('#l4').show();
                     $('#l5').hide();
                 }
-                else {
+                else if ($(this).attr('value') == 'Sec 5') {
                     $('#l1').hide();
                     $('#l2').hide();
                     $('#l3').hide();
@@ -125,7 +125,7 @@
                                     <tr>
                                         <td>{{ student.get_name() }}</td>
                                         <td>{{ student.get_squad() }}</td>
-                                        <td>blank</td>
+                                        <td>{{ student.get_level() }}</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -140,7 +140,7 @@
                             <div id="l3">{{ render_field(form.l3class, class_="form-vertical") }}</div>
                             <div id="l4">{{ render_field(form.l4class, class_="form-vertical") }}</div>
                             <div id="l5">{{ render_field(form.l5class, class_="form-vertical") }}</div>
-                            <input type="submit" name="action" value="Submit" class="btn btn-info"/>
+                            <input type="submit" name="action" value="Submit" class="btn btn-default"/>
                         </form>
                     </div>
                 </div>

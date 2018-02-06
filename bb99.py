@@ -49,49 +49,6 @@ def logout():
     flash('You are now logged out', 'success')
     return redirect(url_for('index'))
 
-@app.route('/students', methods=['GET', 'POST'])
-def students():
-    form = AddStudent(request.form)
-    student_db = stud_ref.get()
-    totalstud = []
-
-    for eachstud in student_db.items():
-        findstudent = sClass.Students(eachstud[1]['name'], eachstud[1]['squad'])
-        totalstud.append(findstudent)
-
-    if request.method == 'POST':
-        if request.form['action'] == 'Submit':
-            student_db = root.child('students')
-            student_db.push({
-                'name': form.name.data,
-                'squad': form.squad.data,
-            })
-
-    return render_template('students.html', form=form, students=totalstud)
-
-
-@app.route('/attendance', methods=['GET', 'POST'])
-def attendance():
-    student_db = stud_ref.get()
-    totalstud = []
-
-    for eachstud in student_db.items():
-        findstudent = sClass.Students(eachstud[1]['name'], eachstud[1]['squad'])
-        totalstud.append(findstudent)
-
-    if request.method == 'POST':
-        if request.form['action'] == 'Submit':
-            present = request.form.getlist('check')
-            for i in present:
-                for eachstud in student_db.items():
-                    if i == eachstud[1]['name']:
-                        tempattendance = stud_ref.child(eachstud[0])
-                        tempattendance.update({'tempcheck': '1'})
-                    if eachstud[1]['name'] not in present:
-                        tempattendance = stud_ref.child(eachstud[0])
-                        tempattendance.update({'tempcheck': '0'})
-    return render_template('attendance.html', students=totalstud)
-
 
 class RequiredIf(object):
     def __init__(self, *args, **kwargs):
@@ -110,7 +67,7 @@ class RequiredIf(object):
 class AddStudent(Form):
     name = StringField('Enter Full Name')
     squad = SelectField('Squad', choices=[('A', 'Alpha'), ('B', 'Bravo'), ('C', 'Charlie'), ('D', 'Delta'), ('E', 'Echo'), ('F', 'Foxtrot')])
-    slevel = RadioField('Level', choices=[('1', 'Sec1'), ('2', 'Sec 2'), ('3', 'Sec 3'), ('4', 'Sec 4'), ('5', 'Sec 5')])
+    slevel = RadioField('Level', choices=[('Sec 1', 'Sec1'), ('Sec 2', 'Sec 2'), ('Sec 3', 'Sec 3'), ('Sec 4', 'Sec 4'), ('Sec 5', 'Sec 5')])
     l1class = RadioField('Level', choices=[('1E1', '1E1'), ('1E2', '1E2'), ('1E3', '1E3'), ('1E4', '1E4'),
                                          ('1N1', '1N1'), ('1N2', '1N2'), ('1N3', '1N3'), ('1N4', '1N4'), ('1T1', '1T1') ])
     l2class = RadioField('Level', choices=[('2E1', '2E1'), ('2E2', '2E2'), ('2E3', '2E3'), ('2E4', '2E4'),
@@ -123,6 +80,65 @@ class AddStudent(Form):
                                            ('4T1', '4T1')])
     l5class = RadioField('Level', choices=[('5N1', '5N1'), ('5N2', '5N2')])
     submit = SubmitField('Submit')
+
+
+@app.route('/students', methods=['GET', 'POST'])
+def students():
+    form = AddStudent(request.form)
+    student_db = stud_ref.get()
+    totalstud = []
+
+    for eachstud in student_db.items():
+        findstudent = sClass.Students(eachstud[1]['name'], eachstud[1]['squad'], eachstud[1]['slevel'], eachstud[1]['tempcheck'])
+        totalstud.append(findstudent)
+
+    if request.method == 'POST':
+        if request.form['action'] == 'Submit':
+            sclass = ''
+            if form.l1class.data != '':
+                sclass = form.l1class.data
+            elif form.l2class.data != '':
+                sclass = form.l2class.data
+            elif form.l2class.data != '':
+                sclass = form.l3class.data
+            elif form.l2class.data != '':
+                sclass = form.l4class.data
+            elif form.l2class.data != '':
+                sclass = form.l5class.data
+            student_db = root.child('students')
+            student_db.push({
+                'name': form.name.data,
+                'squad': form.squad.data,
+                'sclass' : sclass,
+                'slevel' : form.slevel.data
+            })
+            return redirect(url_for('students'))
+
+    return render_template('students.html', form=form, students=totalstud)
+
+
+@app.route('/attendance', methods=['GET', 'POST'])
+def attendance():
+    student_db = stud_ref.get()
+    totalstud = []
+
+    for eachstud in student_db.items():
+        findstudent = sClass.Students(eachstud[1]['name'], eachstud[1]['squad'], eachstud[1]['slevel'], eachstud[1]['tempcheck'])
+        totalstud.append(findstudent)
+
+    if request.method == 'POST':
+        if request.form['action'] == 'Submit':
+            present = request.form.getlist('check')
+            for i in present:
+                for eachstud in student_db.items():
+                    if i == eachstud[1]['name']:
+                        tempattendance = stud_ref.child(eachstud[0])
+                        tempattendance.update({'tempcheck': '1'})
+                    if eachstud[1]['name'] not in present:
+                        tempattendance = stud_ref.child(eachstud[0])
+                        tempattendance.update({'tempcheck': '0'})
+        return redirect(url_for('attendance'))
+    return render_template('attendance.html', students=totalstud)
 
 if __name__ == '__main__':
     app.run()
