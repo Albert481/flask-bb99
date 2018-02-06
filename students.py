@@ -1,9 +1,9 @@
 class Students:
     def __init__(self, name, squad, slevel, tattend):
         self.__name = name
+        self.__sclass = ''
         self.__squad = squad
         self.__slevel = slevel
-        self.__sclass = ''
         self.__tattend = tattend
         # self.__location = location
         # self.__comments = comments

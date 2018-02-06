@@ -94,23 +94,23 @@ def students():
 
     if request.method == 'POST':
         if request.form['action'] == 'Submit':
-            sclass = ''
             if form.l1class.data != '':
                 sclass = form.l1class.data
-            elif form.l2class.data != '':
+            if form.l2class.data != '':
                 sclass = form.l2class.data
-            elif form.l2class.data != '':
+            if form.l3class.data != '':
                 sclass = form.l3class.data
-            elif form.l2class.data != '':
+            if form.l4class.data != '':
                 sclass = form.l4class.data
-            elif form.l2class.data != '':
+            if form.l5class.data != '':
                 sclass = form.l5class.data
             student_db = root.child('students')
             student_db.push({
                 'name': form.name.data,
                 'squad': form.squad.data,
                 'sclass' : sclass,
-                'slevel' : form.slevel.data
+                'slevel' : form.slevel.data,
+                'tempcheck' : '0'
             })
             return redirect(url_for('students'))
 
