@@ -70,7 +70,7 @@ def students():
     return render_template('students.html', form=form, students=totalstud)
 
 
-@app.route('/attendance')
+@app.route('/attendance', methods=['GET', 'POST'])
 def attendance():
     student_db = stud_ref.get()
     totalstud = []
@@ -81,12 +81,15 @@ def attendance():
 
     if request.method == 'POST':
         if request.form['action'] == 'Submit':
-            student_db = root.child('students')
-            student_db.push({
-                'name': form.name.data,
-                'squad': form.squad.data,
-            })
-
+            present = request.form.getlist('check')
+            for i in present:
+                for eachstud in student_db.items():
+                    if i == eachstud[1]['name']:
+                        tempattendance = stud_ref.child(eachstud[0])
+                        tempattendance.update({'tempcheck': '1'})
+                    if eachstud[1]['name'] not in present:
+                        tempattendance = stud_ref.child(eachstud[0])
+                        tempattendance.update({'tempcheck': '0'})
     return render_template('attendance.html', students=totalstud)
 
 

@@ -80,14 +80,13 @@
                                         <td>{{ student.get_name() }}</td>
                                         <td>{{ student.get_squad() }}</td>
                                         <td>
-                                            <form action="" method="post">
-                                            <input type=checkbox name=do_check value="{{ student.get_name() }}">
+                                            <input type="checkbox" name="check" value="{{ student.get_name() }}">
                                         </td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
-                            <input type=submit value=Submit>
+                            <input type="submit" name="action" value="Submit">
                             </form>
                         </div>
                     </div>
