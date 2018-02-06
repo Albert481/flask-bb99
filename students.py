@@ -1,7 +1,7 @@
 class Students:
-    def __init__(self, name, squad, slevel, tattend):
+    def __init__(self, name, sclass, squad, slevel, tattend):
         self.__name = name
-        self.__sclass = ''
+        self.__sclass = sclass
         self.__squad = squad
         self.__slevel = slevel
         self.__tattend = tattend
