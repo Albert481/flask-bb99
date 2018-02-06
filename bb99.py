@@ -3,6 +3,7 @@ from wtforms import Form, SelectMultipleField, StringField, PasswordField, valid
     ValidationError, FileField, SubmitField, TextAreaField, DateField
 import firebase_admin
 from firebase_admin import credentials, db, storage
+import students as sClass
 
 cred = credentials.Certificate('cred/bb99-a73bb-firebase-adminsdk-lmv85-534444e884.json')
 default_app = firebase_admin.initialize_app(cred, {
@@ -11,7 +12,7 @@ default_app = firebase_admin.initialize_app(cred, {
 
 root = db.reference()
 user_ref = db.reference('userbase')
-stud = db.reference('students')
+stud_ref = db.reference('students')
 
 app = Flask(__name__)
 app.config['SECRET KEY'] = 'secret123'
@@ -36,7 +37,7 @@ def index():
                 session['logged_in'] = True
                 session['id'] = username
 
-                return redirect(url_for('home'))
+                return redirect(url_for('index'))
             else:
                 flash('Login is not valid!', 'danger')
         return render_template('index.html', form=form)
@@ -48,13 +49,46 @@ def logout():
     flash('You are now logged out', 'success')
     return redirect(url_for('index'))
 
-@app.route('/home')
-def home():
-    return render_template('home.html')
+@app.route('/students', methods=['GET', 'POST'])
+def students():
+    form = AddStudent(request.form)
+    student_db = stud_ref.get()
+    totalstud = []
+
+    for eachstud in student_db.items():
+        findstudent = sClass.Students(eachstud[1]['name'], eachstud[1]['squad'])
+        totalstud.append(findstudent)
+
+    if request.method == 'POST':
+        if request.form['action'] == 'Submit':
+            student_db = root.child('students')
+            student_db.push({
+                'name': form.name.data,
+                'squad': form.squad.data,
+            })
+
+    return render_template('students.html', form=form, students=totalstud)
+
 
 @app.route('/attendance')
 def attendance():
-    return render_template('attendance.html')
+    student_db = stud_ref.get()
+    totalstud = []
+
+    for eachstud in student_db.items():
+        findstudent = sClass.Students(eachstud[1]['name'], eachstud[1]['squad'])
+        totalstud.append(findstudent)
+
+    if request.method == 'POST':
+        if request.form['action'] == 'Submit':
+            student_db = root.child('students')
+            student_db.push({
+                'name': form.name.data,
+                'squad': form.squad.data,
+            })
+
+    return render_template('attendance.html', students=totalstud)
+
 
 class RequiredIf(object):
     def __init__(self, *args, **kwargs):
@@ -81,19 +115,6 @@ class AddStudent(Form):
     # l4class =
     # l5class =
     submit = SubmitField('Submit')
-
-@app.route('/students', methods=['GET', 'POST'])
-def students():
-    form = AddStudent(request.form)
-    if request.method == 'POST':
-        if request.form['action'] == 'Submit':
-            student_db = root.child('students')
-            student_db.push({
-                'name': form.name.data,
-                'squad': form.squad.data,
-            })
-    return render_template('students.html', form=form)
-
 
 if __name__ == '__main__':
     app.run()

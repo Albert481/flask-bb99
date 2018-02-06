@@ -19,31 +19,42 @@
 {% endblock %}
 {% block body %}
     {% from "includes/_formhelper.html" import render_field %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 col-md-offset-4">
-                <div class="login-panel panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Please Sign In</h3>
-                    </div>
-                    <div class="panel-body">
-                        <form role="form" method="POST">
-                            <fieldset>
-                                <div class="form-group">
-                                    {{ render_field(form.username, class_="form-control") }}
-                                </div>
-                                <div class="form-group">
-                                    {{ render_field(form.password, class_="form-control") }}
-                                </div>
-                                <!-- Change this to a button or input when using this as a form -->
-                                <input type="submit" value="Log In" class="btn btn-lg btn-success btn-block"/>
-                            </fieldset>
-                        </form>
+    {% if session['logged_in'] %}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <h4>Welcome back {{ session ['user_data']['username'] }}!</h4>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="login-panel panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Please Sign In</h3>
+                        </div>
+                        <div class="panel-body">
+                            <form role="form" method="POST">
+                                <fieldset>
+                                    <div class="form-group">
+                                        {{ render_field(form.username, class_="form-control") }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ render_field(form.password, class_="form-control") }}
+                                    </div>
+                                    <!-- Change this to a button or input when using this as a form -->
+                                    <input type="submit" value="Log In" class="btn btn-lg btn-success btn-block"/>
+                                </fieldset>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    {% endif %}
 
     <!-- jQuery -->
     <script src="../static/js/jquery.min.js"></script>
