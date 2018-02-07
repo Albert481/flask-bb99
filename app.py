@@ -3,6 +3,8 @@ from wtforms import Form, SelectMultipleField, StringField, PasswordField, valid
     ValidationError, FileField, SubmitField, TextAreaField, DateField
 import firebase_admin
 from firebase_admin import credentials, db, storage
+import xlrd
+
 import students as sClass
 
 cred = credentials.Certificate('cred/bb99-a73bb-firebase-adminsdk-lmv85-534444e884.json')
@@ -38,8 +40,8 @@ def index():
                 session['id'] = username
 
                 return redirect(url_for('index'))
-            else:
-                flash('Login is not valid!', 'danger')
+
+            flash('Login is not valid!', 'danger')
         return render_template('index.html', form=form)
     return render_template('index.html', form=form)
 
@@ -104,6 +106,7 @@ def students():
                 selectclass = form.l4class.data
             elif form.l5class.data != 'None':
                 selectclass = form.l5class.data
+
             student_db = root.child('students')
             student_db.push({
                 'name': form.name.data,
