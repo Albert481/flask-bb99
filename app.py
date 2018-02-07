@@ -36,6 +36,7 @@ def index():
         userbase = user_ref.get()
         for user in userbase.items():
             if user[1]['username'] == username and user[1]['password'] == password:
+                session['user_data'] = user[1]
                 session['role'] = user[1]['role']
                 session['logged_in'] = True
                 session['id'] = username
