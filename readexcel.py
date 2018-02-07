@@ -9,6 +9,7 @@ total_cols = worksheet.ncols
 table = list()
 record = list()
 
+#Reads data from excel sheet
 for i in range(total_rows):
     for j in range(total_cols):
         record.append(worksheet.cell(i, j).value)
