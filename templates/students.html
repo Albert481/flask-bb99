@@ -132,16 +132,7 @@
                             </table>
                         </div>
                         <form class="form-inline" method="POST" action="/students">
-                            {{ render_field(form.name, class_="form-horizontal") }}
-                            {{ render_field(form.squad, class_="form-vertical") }}
-                            {{ render_field(form.slevel, class_="form-vertical") }}
-                            <div id="l1">{{ render_field(form.l1class, class_="form-vertical") }}</div>
-                            <div id="l2">{{ render_field(form.l2class, class_="form-vertical") }}</div>
-                            <div id="l3">{{ render_field(form.l3class, class_="form-vertical") }}</div>
-                            <div id="l4">{{ render_field(form.l4class, class_="form-vertical") }}</div>
-                            <div id="l5">{{ render_field(form.l5class, class_="form-vertical") }}</div>
                             <input type="submit" name="action" value="Load Excel" class="btn btn-info"/>
-                            <input type="submit" name="action" value="Submit" class="btn btn-success"/>
                         </form>
                     </div>
                 </div>
@@ -178,7 +169,8 @@
     <script>
         $(document).ready(function () {
             $('#studentTable').DataTable({
-                responsive: true
+                responsive: true,
+                iDisplayLength: 50
             });
         });
     </script>

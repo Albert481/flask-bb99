@@ -41,6 +41,7 @@ def index():
                 session['logged_in'] = True
                 session['id'] = username
                 session['admin'] = user[1]['admin']
+                print(session['admin'])
                 return redirect(url_for('index'))
 
         flash('Login is not valid!', 'danger')
@@ -96,58 +97,59 @@ def students():
         findstudent = sClass.Students(eachstud[1]['name'],eachstud[1]['sclass'], eachstud[1]['squad'], eachstud[1]['slevel'], eachstud[1]['tempcheck'])
         totalstud.append(findstudent)
 
-    if request.method == 'POST':
-        if request.form['action'] == 'Submit':
-            if form.l1class.data != 'None':
-                selectclass = form.l1class.data
-            elif form.l2class.data != 'None':
-                selectclass = form.l2class.data
-            elif form.l3class.data != 'None':
-                selectclass = form.l3class.data
-            elif form.l4class.data != 'None':
-                selectclass = form.l4class.data
-            elif form.l5class.data != 'None':
-                selectclass = form.l5class.data
-
-            student_db = root.child('students')
-            student_db.push({
-                'name': form.name.data,
-                'sclass' : selectclass,
-                'slevel' : form.slevel.data,
-                'squad': form.squad.data,
-                'tempcheck' : '0'
-            })
-            return redirect(url_for('students'))
-        if request.form['action'] == 'Load Excel':
-            wb = xlrd.open_workbook("99th Coy Nominal Roll.xlsx")
-            #Read first sheet
-            worksheet = wb.sheet_by_index(0)
-            total_cols = worksheet.ncols
-            table = list()
-            record = list()
-            # Reads data from excel sheet
-            for i in range(1,worksheet.nrows):
-                for j in range(total_cols):
-                    record.append(worksheet.cell(i, j).value)
-                table.append(record)
-                record = []
-                i += 1
-            #Reads the excel and assign appropriate values
-            student_db = root.child('students')
-            student_db.delete()
-            for i in table:
-                name = i[3]
-                sclass =i[4]
-                slevel = i[8]
-                squad = i[7]
-                student_db.push({
-                    'name': name,
-                    'sclass': sclass,
-                    'slevel': slevel,
-                    'squad': squad,
-                    'tempcheck': '0'
-                })
-            return redirect(url_for('students'))
+    # if request.method == 'POST':
+    #     if request.form['action'] == 'Submit':
+    #         if form.l1class.data != 'None':
+    #             selectclass = form.l1class.data
+    #         elif form.l2class.data != 'None':
+    #             selectclass = form.l2class.data
+    #         elif form.l3class.data != 'None':
+    #             selectclass = form.l3class.data
+    #         elif form.l4class.data != 'None':
+    #             selectclass = form.l4class.data
+    #         elif form.l5class.data != 'None':
+    #             selectclass = form.l5class.data
+    #
+    #         student_db = root.child('students')
+    #         student_db.push({
+    #             'name': form.name.data,
+    #             'sclass' : selectclass,
+    #             'slevel' : form.slevel.data,
+    #             'squad': form.squad.data,
+    #             'tempcheck' : '0'
+    #         })
+    #         return redirect(url_for('students'))
+        if request.method == 'POST':
+            if request.form['action'] == 'Load Excel':
+                wb = xlrd.open_workbook("99th Coy Nominal Roll.xlsx")
+                #Read first sheet
+                worksheet = wb.sheet_by_index(0)
+                total_cols = worksheet.ncols
+                table = list()
+                record = list()
+                # Reads data from excel sheet
+                for i in range(1,worksheet.nrows):
+                    for j in range(total_cols):
+                        record.append(worksheet.cell(i, j).value)
+                    table.append(record)
+                    record = []
+                    i += 1
+                #Reads the excel and assign appropriate values
+                student_db = root.child('students')
+                student_db.delete()
+                for i in table:
+                    name = i[3]
+                    sclass =i[4]
+                    slevel = i[8]
+                    squad = i[7]
+                    student_db.push({
+                        'name': name,
+                        'sclass': sclass,
+                        'slevel': slevel,
+                        'squad': squad,
+                        'tempcheck': '0'
+                    })
+                return redirect(url_for('students'))
     return render_template('students.html', form=form, students=totalstud)
 
 
@@ -196,6 +198,7 @@ def admin():
                 'admin': 0,
                 'role' : role.upper()
             })
+        flash('Successfully registered', 'success')
         return redirect(url_for('admin'))
     return render_template('admin.html', form=form)
 
