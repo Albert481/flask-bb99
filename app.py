@@ -110,13 +110,42 @@ def students():
             student_db = root.child('students')
             student_db.push({
                 'name': form.name.data,
-                'squad': form.squad.data,
                 'sclass' : selectclass,
                 'slevel' : form.slevel.data,
+                'squad': form.squad.data,
                 'tempcheck' : '0'
             })
             return redirect(url_for('students'))
-
+        if request.form['action'] == 'Load Excel':
+            wb = xlrd.open_workbook("99th Coy Nominal Roll.xlsx")
+            #Read first sheet
+            worksheet = wb.sheet_by_index(0)
+            total_cols = worksheet.ncols
+            table = list()
+            record = list()
+            # Reads data from excel sheet
+            for i in range(1,worksheet.nrows):
+                for j in range(total_cols):
+                    record.append(worksheet.cell(i, j).value)
+                table.append(record)
+                record = []
+                i += 1
+            #Reads the excel and assign appropriate values
+            student_db = root.child('students')
+            student_db.delete()
+            for i in table:
+                name = i[3]
+                sclass =i[4]
+                slevel = i[8]
+                squad = i[7]
+                student_db.push({
+                    'name': name,
+                    'sclass': sclass,
+                    'slevel': slevel,
+                    'squad': squad,
+                    'tempcheck': '0'
+                })
+            return redirect(url_for('students'))
     return render_template('students.html', form=form, students=totalstud)
 
 
