@@ -14,8 +14,10 @@
                 <i class="fa fa-user fa-fw"></i> {{ session ['user_data']['username'] }} <b class="caret"></b>
             </a>
             <ul class="dropdown-menu dropdown-user">
-                <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                {% if session['logged_in'] and session['admin'] == '1' %}
+                <li><a href="admin"><i class="fa fa-gear fa-fw"></i> Admin</a>
                 </li>
+                {% endif %}
                 <li class="divider"></li>
                 <li><a href="logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                 </li>

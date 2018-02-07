@@ -24,6 +24,7 @@ app.secret_key = 'secret123'
 class LoginForm(Form):
     username = StringField('Username:', [validators.DataRequired()])
     password = PasswordField('Password:', [validators.DataRequired()])
+    role = StringField('Role: ', [validators.DataRequired()])
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -38,10 +39,11 @@ def index():
                 session['user_data'] = user[1]
                 session['logged_in'] = True
                 session['id'] = username
-
+                session['admin'] = user[1]['admin']
+                print(session['admin'])
                 return redirect(url_for('index'))
 
-            flash('Login is not valid!', 'danger')
+        flash('Login is not valid!', 'danger')
         return render_template('index.html', form=form)
     return render_template('index.html', form=form)
 
@@ -175,6 +177,27 @@ def attendance():
                 tempattendance.update({'tempcheck': '0'})
         return redirect(url_for('attendance'))
     return render_template('attendance.html', students=totalstud)
+
+class registration:
+    def __init__(self,username, password):
+        self.__username = username
+        self.__password = password
+
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    form = LoginForm(request.form)
+    username = form.username.data
+    role = form.role.data
+    if request.method == 'POST':
+        if request.form['action'] == 'Register':
+            user_ref.push({
+                'username' : username,
+                'password' : 'qwerty',
+                'admin': 0,
+                'role' : role.upper()
+            })
+        return redirect(url_for('admin'))
+    return render_template('admin.html', form=form)
 
 if __name__ == '__main__':
     app.run()

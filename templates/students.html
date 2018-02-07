@@ -107,7 +107,7 @@
             {% include 'includes/_navbar.html' %}
         </div>
 
-        {% if session['logged_in'] %}
+        {% if session['logged_in'] and session['admin'] == '1' %}
             <div class="row">
                 <div class="col-lg-12">
                     <div class="center">
