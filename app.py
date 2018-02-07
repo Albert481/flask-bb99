@@ -199,4 +199,4 @@ def admin():
     return render_template('admin.html', form=form)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port='80')
