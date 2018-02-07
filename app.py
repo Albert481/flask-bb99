@@ -36,11 +36,10 @@ def index():
         userbase = user_ref.get()
         for user in userbase.items():
             if user[1]['username'] == username and user[1]['password'] == password:
-                session['user_data'] = user[1]
+                session['role'] = user[1]['role']
                 session['logged_in'] = True
                 session['id'] = username
                 session['admin'] = user[1]['admin']
-                print(session['admin'])
                 return redirect(url_for('index'))
 
         flash('Login is not valid!', 'danger')

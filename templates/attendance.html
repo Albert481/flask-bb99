@@ -83,6 +83,7 @@
                                     {% else %}
                                     <tr class="danger">
                                     {% endif %}
+                                    {% if session['logged_in'] and session['admin'] == '1' %}
                                         <td>{{ student.get_name() }}</td>
                                         <td>{{ student.get_sclass() }}</td>
                                         <td>{{ student.get_squad() }}</td>
@@ -92,6 +93,7 @@
                                             <input type="checkbox" name="check" value="{{ student.get_name() }}">
                                             {% endif %}
                                         </td>
+                                    {% endif %}
                                     </tr>
                                 {% endfor %}
                                 </tbody>
