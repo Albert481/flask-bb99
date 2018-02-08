@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, session
-from wtforms import Form, SelectMultipleField, StringField, PasswordField, validators, RadioField, SelectField, \
-    ValidationError, FileField, SubmitField, TextAreaField, DateField
+from wtforms import Form, SelectMultipleField, StringField, PasswordField, validators, RadioField, SelectField, ValidationError, FileField, SubmitField, TextAreaField, DateField
 import firebase_admin
 from firebase_admin import credentials, db, storage
 import xlrd
@@ -22,8 +21,6 @@ app.secret_key = 'secret123'
 class LoginForm(Form):
     username = StringField('Username:', [validators.DataRequired()])
     password = PasswordField('Password:', [validators.DataRequired()])
-    role = StringField('Role: ', [validators.DataRequired()])
-
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -195,18 +192,26 @@ def attendance():
         return redirect(url_for('attendance'))
     return render_template('attendance.html', students=totalstud)
 
-class registration:
-    def __init__(self,username, password):
-        self.__username = username
-        self.__password = password
+def validate_registration(form, field):
+    userbase = user_ref.get()
+    for user in userbase.items():
+        if user[1]['username'] == field.data:
+            raise ValidationError('Username exists!')
+
+class RegistrationForm(Form):
+    username = StringField('Username:', [validators.DataRequired(), validate_registration])
+    role = StringField('Role: ', [validators.DataRequired()])
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    form = LoginForm(request.form)
+    form = RegistrationForm(request.form)
     username = form.username.data
     role = form.role.data
-    if request.method == 'POST':
+    print('c')
+    if request.method == 'POST' and form.validate():
+        print('a')
         if request.form['action'] == 'Register':
+            print('b')
             user_ref.push({
                 'username' : username,
                 'password' : 'qwerty',
