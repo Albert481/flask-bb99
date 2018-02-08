@@ -131,7 +131,12 @@
                                 </tbody>
                             </table>
                         </div>
-                        <form class="form-inline" method="POST" action="/students">
+                        <form class="form-inline" id="upload-form" method="POST" action="/students" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label>Upload Excel</label>
+                                <input type="file" name="file">
+                                <input type = "submit" name="action" value="Submit"/>
+                            </div>
                             <input type="submit" name="action" value="Load Excel" class="btn btn-info"/>
                         </form>
                     </div>

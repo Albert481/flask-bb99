@@ -3,8 +3,8 @@ from wtforms import Form, SelectMultipleField, StringField, PasswordField, valid
     ValidationError, FileField, SubmitField, TextAreaField, DateField
 import firebase_admin
 from firebase_admin import credentials, db, storage
+from werkzeug import generate_password_hash, check_password_hash
 import xlrd
-
 import students as sClass
 
 cred = credentials.Certificate('cred/bb99-a73bb-firebase-adminsdk-lmv85-534444e884.json')
@@ -19,7 +19,6 @@ stud_ref = db.reference('students')
 app = Flask(__name__)
 app.config['SECRET KEY'] = 'secret123'
 app.secret_key = 'secret123'
-
 
 class LoginForm(Form):
     username = StringField('Username:', [validators.DataRequired()])
@@ -120,6 +119,8 @@ def students():
     #         })
     #         return redirect(url_for('students'))
         if request.method == 'POST':
+            if request.form['action'] == 'Submit':
+                pass
             if request.form['action'] == 'Load Excel':
                 wb = xlrd.open_workbook("99th Coy Nominal Roll.xlsx")
                 #Read first sheet
