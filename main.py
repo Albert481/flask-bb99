@@ -114,6 +114,8 @@ def attendance():
     student_db = stud_ref.get()
     totalstud = []
     attendancestudlist = []
+    stotal = 0
+    spresent = 0
     aList = []
     bList = []
     cList = []
@@ -124,6 +126,8 @@ def attendance():
     for eachstud in student_db.items():
         attendancestudlist.append(eachstud)
         findstudent = sClass.Students(eachstud[1]['name'],eachstud[1]['sclass'], eachstud[1]['squad'], eachstud[1]['slevel'], eachstud[1]['tempcheck'])
+        if findstudent.get_tattend() == '1':
+            spresent += 1
         if findstudent.get_squad()[:1] == 'A':
             aList.append(eachstud)
         elif findstudent.get_squad()[:1] == 'B':
@@ -136,11 +140,9 @@ def attendance():
             eList.append(eachstud)
         elif findstudent.get_squad()[:1] == 'F':
             fList.append(eachstud)
+        stotal += 1
         totalstud.append(findstudent)
-    print(aList)
-    print(bList)
-    print(cList)
-    print(dList)
+
     if request.method == 'POST':
         if request.form['action'] == 'Submit':
             present = request.form.getlist('check')
@@ -189,8 +191,9 @@ def attendance():
             for eachstud in student_db.items():
                 tempattendance = stud_ref.child(eachstud[0])
                 tempattendance.update({'tempcheck': '0'})
+
         return redirect(url_for('attendance'))
-    return render_template('attendance.html', students=totalstud)
+    return render_template('attendance.html', students=totalstud, present=spresent, total=stotal)
 
 def validate_registration(form, field):
     userbase = user_ref.get()
