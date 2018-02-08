@@ -3,7 +3,6 @@ from wtforms import Form, SelectMultipleField, StringField, PasswordField, valid
     ValidationError, FileField, SubmitField, TextAreaField, DateField
 import firebase_admin
 from firebase_admin import credentials, db, storage
-from werkzeug import generate_password_hash, check_password_hash
 import xlrd
 import students as sClass
 
@@ -158,22 +157,23 @@ def students():
 def attendance():
     student_db = stud_ref.get()
     totalstud = []
+    attendancestudlist = []
 
     for eachstud in student_db.items():
+        attendancestudlist.append(eachstud)
         findstudent = sClass.Students(eachstud[1]['name'],eachstud[1]['sclass'], eachstud[1]['squad'], eachstud[1]['slevel'], eachstud[1]['tempcheck'])
         totalstud.append(findstudent)
-
+    print(attendancestudlist)
     if request.method == 'POST':
         if request.form['action'] == 'Submit':
             present = request.form.getlist('check')
-            for i in present:
-                for eachstud in student_db.items():
-                    if i == eachstud[1]['name']:
-                        tempattendance = stud_ref.child(eachstud[0])
-                        tempattendance.update({'tempcheck': '1'})
-                    if eachstud[1]['name'] not in present:
-                        tempattendance = stud_ref.child(eachstud[0])
-                        tempattendance.update({'tempcheck': '0'})
+            for eachstud in attendancestudlist:
+                tempattendance = stud_ref.child(eachstud[0])
+                if eachstud[1]['name'] in present:
+                    tempattendance.update({'tempcheck': '1'})
+                else:
+                    tempattendance.update({'tempcheck': '0'})
+                print(eachstud[1]['name'])
         elif request.form['action'] == 'Reset':
             for eachstud in student_db.items():
                 tempattendance = stud_ref.child(eachstud[0])
