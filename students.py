@@ -22,3 +22,11 @@ class Students:
     #     return self.__comments
     # def get_trolleyid(self):
     #     return self.__trolley
+
+class Infractions(Students):
+    def __init__(self,name, sclass, squad, slevel, tattend, infractioncount):
+        super().__init__(name, sclass, squad, slevel, tattend)
+        self.__infractioncount = infractioncount
+
+    def get_infractioncount(self):
+        return self.__infractioncount

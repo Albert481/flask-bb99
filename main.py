@@ -67,24 +67,30 @@ class RequiredIf(object):
 
 class InfractionForm(Form):
     name = StringField('Name:', [validators.DataRequired()])
-    infractype = RadioField('Infraction Type', choices=[('Attire', 'Attire'), ('Late', 'Late'), ('Late & Attire', 'Late & Attire')])
-    comments = TextAreaField('Additional comments:')
 
 @app.route('/infractions', methods=['GET', 'POST'])
 def infractions():
     student_db = stud_ref.get()
     form = InfractionForm(request.form)
-    now = datetime.datetime.now()
+    infraclist = []
+
+    for eachstud in student_db.items():
+        findstudent = sClass.Infractions(eachstud[1]['name'], eachstud[1]['sclass'], eachstud[1]['squad'],
+                                      eachstud[1]['slevel'], eachstud[1]['tempcheck'], eachstud[1]['infraction'])
+        infraclist.append(findstudent)
+
     if request.method == 'POST':
         for eachstud in student_db.items():
             if form.name.data.upper() in eachstud[1]['name']:
-                tempinfrac = stud_ref.child(eachstud[0]).child('infraction')
+                infraccount = int(eachstud[1]['infraction'])
+                infraccount += 1
+                tempinfrac = stud_ref.child(eachstud[0])
                 tempinfrac.update({
-                    now.strftime("%Y-%m-%d") : (form.infractype.data, form.comments.data)
+                    'infraction' : infraccount
                 })
-                flash('Succesfully recorded', eachstud[1]['name'])
-
-    return render_template('infractions.html', form=form)
+                flash('Succesfully recorded', 'success')
+                return redirect(url_for('infractions'))
+    return render_template('infractions.html', form=form, students=infraclist)
 
 @app.route('/students', methods=['GET', 'POST'])
 def students():
@@ -126,7 +132,7 @@ def students():
                         'slevel': slevel,
                         'squad': squad,
                         'tempcheck': '0',
-                        'infraction' : ''
+                        'infraction' : 0
                     })
                 return redirect(url_for('students'))
     return render_template('students.html', students=totalstud)
