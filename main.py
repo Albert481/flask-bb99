@@ -67,27 +67,8 @@ class RequiredIf(object):
                 else:
                     validators.Optional().__call__(form, field)
 
-class AddStudent(Form):
-    name = StringField('Enter Full Name')
-    squad = SelectField('Squad', choices=[('A', 'Alpha'), ('B', 'Bravo'), ('C', 'Charlie'), ('D', 'Delta'), ('E', 'Echo'), ('F', 'Foxtrot')])
-    slevel = RadioField('Level', choices=[('Sec 1', 'Sec 1'), ('Sec 2', 'Sec 2'), ('Sec 3', 'Sec 3'), ('Sec 4', 'Sec 4'), ('Sec 5', 'Sec 5')])
-    l1class = RadioField('Level', choices=[('1E1', '1E1'), ('1E2', '1E2'), ('1E3', '1E3'), ('1E4', '1E4'),
-                                         ('1N1', '1N1'), ('1N2', '1N2'), ('1N3', '1N3'), ('1N4', '1N4'), ('1T1', '1T1') ])
-    l2class = RadioField('Level', choices=[('2E1', '2E1'), ('2E2', '2E2'), ('2E3', '2E3'), ('2E4', '2E4'),
-                                         ('2N1', '2N1'), ('2N2', '2N2'), ('2N3', '2N3'), ('2N4', '2N4'), ('2T1', '2T1') ])
-    l3class = RadioField('Level', choices=[('3E1', '3E1'), ('2E2', '3E2'), ('3E3', '3E3'), ('3E4', '3E4'),
-                                           ('3N1', '3N1'), ('3N2', '3N2'), ('3N3', '3N3'), ('3N4', '3N4'),
-                                           ('3T1', '3T1')])
-    l4class = RadioField('Level', choices=[('4E1', '4E1'), ('4E2', '4E2'), ('4E3', '4E3'), ('4E4', '4E4'),
-                                           ('4N1', '4N1'), ('4N2', '4N2'), ('4N3', '4N3'), ('4N4', '4N4'),
-                                           ('4T1', '4T1')])
-    l5class = RadioField('Level', choices=[('5N1', '5N1'), ('5N2', '5N2')])
-    submit = SubmitField('Submit')
-
-
 @app.route('/students', methods=['GET', 'POST'])
 def students():
-    form = AddStudent(request.form)
     student_db = stud_ref.get()
     totalstud = []
 
@@ -95,28 +76,6 @@ def students():
         findstudent = sClass.Students(eachstud[1]['name'],eachstud[1]['sclass'], eachstud[1]['squad'], eachstud[1]['slevel'], eachstud[1]['tempcheck'])
         totalstud.append(findstudent)
 
-    # if request.method == 'POST':
-    #     if request.form['action'] == 'Submit':
-    #         if form.l1class.data != 'None':
-    #             selectclass = form.l1class.data
-    #         elif form.l2class.data != 'None':
-    #             selectclass = form.l2class.data
-    #         elif form.l3class.data != 'None':
-    #             selectclass = form.l3class.data
-    #         elif form.l4class.data != 'None':
-    #             selectclass = form.l4class.data
-    #         elif form.l5class.data != 'None':
-    #             selectclass = form.l5class.data
-    #
-    #         student_db = root.child('students')
-    #         student_db.push({
-    #             'name': form.name.data,
-    #             'sclass' : selectclass,
-    #             'slevel' : form.slevel.data,
-    #             'squad': form.squad.data,
-    #             'tempcheck' : '0'
-    #         })
-    #         return redirect(url_for('students'))
         if request.method == 'POST':
             if request.form['action'] == 'Submit':
                 pass
@@ -150,7 +109,7 @@ def students():
                         'tempcheck': '0'
                     })
                 return redirect(url_for('students'))
-    return render_template('students.html', form=form, students=totalstud)
+    return render_template('students.html', students=totalstud)
 
 
 @app.route('/attendance', methods=['GET', 'POST'])

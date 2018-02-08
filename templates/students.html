@@ -49,52 +49,6 @@
         }
     </style>
 
-    <script>
-        $(document).ready(function () {
-            $('#l1').hide();
-            $('#l2').hide();
-            $('#l3').hide();
-            $('#l4').hide();
-            $('#l5').hide();
-            $('input[type="radio"]').click(function () {
-                if ($(this).attr('value') == 'Sec 1') {
-                    $('#l1').show();
-                    $('#l2').hide();
-                    $('#l3').hide();
-                    $('#l4').hide();
-                    $('#l5').hide();
-                }
-                else if ($(this).attr('value') == 'Sec 2') {
-                    $('#l1').hide();
-                    $('#l2').show();
-                    $('#l3').hide();
-                    $('#l4').hide();
-                    $('#l5').hide();
-                }
-                else if ($(this).attr('value') == 'Sec 3') {
-                    $('#l1').hide();
-                    $('#l2').hide();
-                    $('#l3').show();
-                    $('#l4').hide();
-                    $('#l5').hide();
-                }
-                else if ($(this).attr('value') == 'Sec 4') {
-                    $('#l1').hide();
-                    $('#l2').hide();
-                    $('#l3').hide();
-                    $('#l4').show();
-                    $('#l5').hide();
-                }
-                else if ($(this).attr('value') == 'Sec 5') {
-                    $('#l1').hide();
-                    $('#l2').hide();
-                    $('#l3').hide();
-                    $('#l4').hide();
-                    $('#l5').show();
-                }
-            });
-        });
-    </script>
 {% endblock %}
 
 {% block body %}
