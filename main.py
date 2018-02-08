@@ -118,24 +118,76 @@ def attendance():
     totalstud = []
     attendancestudlist = []
     aList = []
+    bList = []
+    cList = []
+    dList = []
+    eList = []
+    fList = []
 
     for eachstud in student_db.items():
         attendancestudlist.append(eachstud)
         findstudent = sClass.Students(eachstud[1]['name'],eachstud[1]['sclass'], eachstud[1]['squad'], eachstud[1]['slevel'], eachstud[1]['tempcheck'])
         if findstudent.get_squad()[:1] == 'A':
-            aList.append(findstudent)
+            aList.append(eachstud)
+        elif findstudent.get_squad()[:1] == 'B':
+            bList.append(eachstud)
+        elif findstudent.get_squad()[:1] == 'C':
+            cList.append(eachstud)
+        elif findstudent.get_squad()[:1] == 'D':
+            dList.append(eachstud)
+        elif findstudent.get_squad()[:1] == 'E':
+            eList.append(eachstud)
+        elif findstudent.get_squad()[:1] == 'F':
+            fList.append(eachstud)
         totalstud.append(findstudent)
-    print(attendancestudlist)
+    print(aList)
+    print(bList)
+    print(cList)
+    print(dList)
     if request.method == 'POST':
         if request.form['action'] == 'Submit':
             present = request.form.getlist('check')
-            for eachstud in attendancestudlist:
-                tempattendance = stud_ref.child(eachstud[0])
-                if eachstud[1]['name'] in present:
-                    tempattendance.update({'tempcheck': '1'})
-                else:
-                    tempattendance.update({'tempcheck': '0'})
-                print(eachstud[1]['name'])
+            if session['role'] == 'A':
+                for eachstud in aList:
+                    tempattendance = stud_ref.child(eachstud[0])
+                    if eachstud[1]['name'] in present:
+                        tempattendance.update({'tempcheck': '1'})
+                    else:
+                        tempattendance.update({'tempcheck': '0'})
+                    print(eachstud[1]['name'])
+            elif session['role'] == 'B':
+                for eachstud in bList:
+                    tempattendance = stud_ref.child(eachstud[0])
+                    if eachstud[1]['name'] in present:
+                        tempattendance.update({'tempcheck': '1'})
+                    else:
+                        tempattendance.update({'tempcheck': '0'})
+                    print(eachstud[1]['name'])
+            elif session['role'] == 'C':
+                for eachstud in cList:
+                    tempattendance = stud_ref.child(eachstud[0])
+                    if eachstud[1]['name'] in present:
+                        tempattendance.update({'tempcheck': '1'})
+                    else:
+                        tempattendance.update({'tempcheck': '0'})
+                    print(eachstud[1]['name'])
+            elif session['role'] == 'D':
+                for eachstud in dList:
+                    tempattendance = stud_ref.child(eachstud[0])
+                    if eachstud[1]['name'] in present:
+                        tempattendance.update({'tempcheck': '1'})
+                    else:
+                        tempattendance.update({'tempcheck': '0'})
+                    print(eachstud[1]['name'])
+            else:
+                for eachstud in attendancestudlist:
+                    tempattendance = stud_ref.child(eachstud[0])
+                    if eachstud[1]['name'] in present:
+                        tempattendance.update({'tempcheck': '1'})
+                    else:
+                        tempattendance.update({'tempcheck': '0'})
+                    print(eachstud[1]['name'])
+
         elif request.form['action'] == 'Reset':
             for eachstud in student_db.items():
                 tempattendance = stud_ref.child(eachstud[0])
