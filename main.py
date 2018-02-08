@@ -67,7 +67,7 @@ class RequiredIf(object):
 
 class InfractionForm(Form):
     name = StringField('Name:', [validators.DataRequired()])
-    infractype = RadioField('Infraction Type', choices=[('Attire', 'Attire'), ('Late', 'Late')])
+    infractype = RadioField('Infraction Type', choices=[('Attire', 'Attire'), ('Late', 'Late'), ('Late & Attire', 'Late & Attire')])
     comments = TextAreaField('Additional comments:')
 
 @app.route('/infractions', methods=['GET', 'POST'])
@@ -78,13 +78,11 @@ def infractions():
     if request.method == 'POST':
         for eachstud in student_db.items():
             if form.name.data.upper() in eachstud[1]['name']:
-                # currentinfrac = eachstud[1]['infraction']
-                # currentinfrac += 1
                 tempinfrac = stud_ref.child(eachstud[0]).child('infraction')
                 tempinfrac.update({
                     now.strftime("%Y-%m-%d") : (form.infractype.data, form.comments.data)
                 })
-                print('Succesfully recorded', eachstud[1]['name'])
+                flash('Succesfully recorded', eachstud[1]['name'])
 
     return render_template('infractions.html', form=form)
 

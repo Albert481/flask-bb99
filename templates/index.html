@@ -25,10 +25,7 @@
                 <div class="col-md-4 col-md-offset-4">
                     <h4>Welcome back, {{ session['user_data']['username'] }}!</h4>
                     <h5>Current role: {{ session['role'] }}</h5>
-                    <h5>Admin Status: {{ session['admin'] }}</h5>
-                    <br><br>
-                    <p>Current role= Your squad</p>
-                    <p>Admin level 0 = Squad Leader, Admin level 1 = Primer/Officer</p>
+                    <h5>Admin level: {{ session['admin'] }}</h5>
                 </div>
             </div>
         </div>
