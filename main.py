@@ -158,10 +158,13 @@ def attendance():
     student_db = stud_ref.get()
     totalstud = []
     attendancestudlist = []
+    aList = []
 
     for eachstud in student_db.items():
         attendancestudlist.append(eachstud)
         findstudent = sClass.Students(eachstud[1]['name'],eachstud[1]['sclass'], eachstud[1]['squad'], eachstud[1]['slevel'], eachstud[1]['tempcheck'])
+        if findstudent.get_squad()[:1] == 'A':
+            aList.append(findstudent)
         totalstud.append(findstudent)
     print(attendancestudlist)
     if request.method == 'POST':
