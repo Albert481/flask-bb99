@@ -6,7 +6,9 @@
         <a class="navbar-brand" href="/">BB99</a>
     </div>
     <ul class="nav navbar-right navbar-top-links">
+        {% if session['logged_in'] and session['admin'] == '1' %}
         <li><a href="students"><i class="fa fa-users"></i> Students</a></li>
+        {% endif %}
         <li><a href="attendance"><i class="fa fa-list-alt"></i> Attendance</a></li>
         <li class="dropdown">
             {% if session['logged_in'] %}

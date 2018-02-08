@@ -196,7 +196,7 @@ def admin():
             user_ref.push({
                 'username' : username,
                 'password' : 'qwerty',
-                'admin': 0,
+                'admin': '1',
                 'role' : role.upper()
             })
         flash('Successfully registered', 'success')

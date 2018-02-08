@@ -83,22 +83,26 @@
                                     {% else %}
                                     <tr class="danger">
                                     {% endif %}
-                                    {% if session['logged_in'] and session['admin'] == '1' %}
-                                        <td>{{ student.get_name() }}</td>
-                                        <td>{{ student.get_sclass() }}</td>
-                                        <td>{{ student.get_squad() }}</td>
-                                        <td>{% if student.get_tattend() == '1' %}
-                                            <input type="checkbox" name="check" value="{{ student.get_name() }}" checked>
-                                            {% else %}
-                                            <input type="checkbox" name="check" value="{{ student.get_name() }}">
-                                            {% endif %}
-                                        </td>
+                                    {% if session['logged_in'] %}
+                                        {% if session['role'] in student.get_squad()[:1] or session['role'] == '*' %}
+                                            <td>{{ student.get_name() }}</td>
+                                            <td>{{ student.get_sclass() }}</td>
+                                            <td>{{ student.get_squad() }}</td>
+                                            <td>{% if student.get_tattend() == '1' %}
+                                                <input type="checkbox" name="check" value="{{ student.get_name() }}" checked>
+                                                {% else %}
+                                                <input type="checkbox" name="check" value="{{ student.get_name() }}">
+                                                {% endif %}
+                                            </td>
+                                        {% endif %}
                                     {% endif %}
                                     </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
-                            <input type="submit" name="action" value="Reset" class="btn btn-danger">
+                            {% if session['admin'] == '1' %}
+                                <input type="submit" name="action" value="Reset" class="btn btn-danger">
+                            {% endif %}
                             <input type="submit" name="action" value="Submit" class="btn btn-info">
                             </form>
                         </div>
@@ -137,7 +141,7 @@
         $(document).ready(function () {
             $('#studentTable').DataTable({
                 responsive: true,
-                iDisplayLength: 50
+                iDisplayLength: 100
             });
         });
     </script>
