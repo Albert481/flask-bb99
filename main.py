@@ -105,10 +105,10 @@ def students():
         totalstud.append(findstudent)
 
     if request.method == 'POST':
-        if request.form['action'] == 'Submit':
+        if request.form['action'] == 'Save':
             f = request.files['upload']
             f.save(secure_filename(f.filename))
-            print('saved')
+            flash('File saved', 'success')
 
         if request.form['action'] == 'Load Excel':
             try:

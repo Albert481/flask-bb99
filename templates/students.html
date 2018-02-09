@@ -87,12 +87,13 @@
                             </table>
                         </div>
                         <form class="form-inline" id="upload-form" method="POST" action="/students" enctype="multipart/form-data">
-                            <div class="form-group">
-                                <label>Upload Excel</label>
+                            <div class="form-group .col-xs-7" >
                                 <input type="file" name="upload">
-                                <input type="submit" name="action" value="Submit"/>
+                                <input type="submit" name="action" value="Save"/>
                             </div>
-                            <input type="submit" name="action" value="Load Excel" class="btn btn-info"/>
+                            <div class="form-group .col-xs-5">
+                                <input align="right" type="submit" name="action" value="Load Excel" class="btn btn-info"/>
+                            </div>
                         </form>
                     </div>
                 </div>
