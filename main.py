@@ -3,13 +3,15 @@ from wtforms import Form, SelectMultipleField, StringField, PasswordField, valid
 import firebase_admin
 from firebase_admin import credentials, db, storage
 import xlrd
-import datetime
+import os
+from werkzeug.utils import secure_filename
 import students as sClass
 
 cred = credentials.Certificate('cred/bb99-a73bb-firebase-adminsdk-lmv85-534444e884.json')
 default_app = firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://bb99-a73bb.firebaseio.com/'
 })
+
 
 root = db.reference()
 user_ref = db.reference('userbase')
@@ -18,6 +20,7 @@ stud_ref = db.reference('students')
 app = Flask(__name__)
 app.config['SECRET KEY'] = 'secret123'
 app.secret_key = 'secret123'
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 class LoginForm(Form):
     username = StringField('Username:', [validators.DataRequired()])
@@ -101,40 +104,43 @@ def students():
         findstudent = sClass.Students(eachstud[1]['name'],eachstud[1]['sclass'], eachstud[1]['squad'], eachstud[1]['slevel'], eachstud[1]['tempcheck'])
         totalstud.append(findstudent)
 
-        if request.method == 'POST':
-            if request.form['action'] == 'Submit':
-                pass
-            if request.form['action'] == 'Load Excel':
-                wb = xlrd.open_workbook("99th Coy Nominal Roll.xlsx")
-                #Read first sheet
-                worksheet = wb.sheet_by_index(0)
-                total_cols = worksheet.ncols
-                table = list()
-                record = list()
-                # Reads data from excel sheet
-                for i in range(1,worksheet.nrows):
-                    for j in range(total_cols):
-                        record.append(worksheet.cell(i, j).value)
-                    table.append(record)
-                    record = []
-                    i += 1
-                #Reads the excel and assign appropriate values
-                student_db = root.child('students')
-                student_db.delete()
-                for i in table:
-                    name = i[3]
-                    sclass =i[4]
-                    slevel = i[8]
-                    squad = i[7]
-                    student_db.push({
-                        'name': name,
-                        'sclass': sclass,
-                        'slevel': slevel,
-                        'squad': squad,
-                        'tempcheck': '0',
-                        'infraction' : 0
-                    })
-                return redirect(url_for('students'))
+    if request.method == 'POST':
+        if request.form['action'] == 'Submit':
+            f = request.files['upload']
+            f.save(secure_filename(f.filename))
+            print('saved')
+
+        if request.form['action'] == 'Load Excel':
+            wb = xlrd.open_workbook("99th_Coy_Nominal_Roll.xlsx")
+            #Read first sheet
+            worksheet = wb.sheet_by_index(0)
+            total_cols = worksheet.ncols
+            table = list()
+            record = list()
+            # Reads data from excel sheet
+            for i in range(1,worksheet.nrows):
+                for j in range(total_cols):
+                    record.append(worksheet.cell(i, j).value)
+                table.append(record)
+                record = []
+                i += 1
+            #Reads the excel and assign appropriate values
+            student_db = root.child('students')
+            student_db.delete()
+            for i in table:
+                name = i[3]
+                sclass =i[4]
+                slevel = i[8]
+                squad = i[7]
+                student_db.push({
+                    'name': name,
+                    'sclass': sclass,
+                    'slevel': slevel,
+                    'squad': squad,
+                    'tempcheck': '0',
+                    'infraction' : 0
+                })
+            return redirect(url_for('students'))
     return render_template('students.html', students=totalstud)
 
 
