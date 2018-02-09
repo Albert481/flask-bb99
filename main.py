@@ -43,7 +43,7 @@ def index():
                 print(session['admin'])
                 return redirect(url_for('index'))
 
-        flash('Login is not valid!', 'danger')
+        flash('Login failed: Incorrect username or password', 'danger')
         return render_template('index.html', form=form)
     return render_template('index.html', form=form)
 
@@ -106,9 +106,12 @@ def students():
 
     if request.method == 'POST':
         if request.form['action'] == 'Save':
-            f = request.files['upload']
-            f.save(secure_filename(f.filename))
-            flash('File saved', 'success')
+            try:
+                f = request.files['upload']
+                f.save(secure_filename(f.filename))
+                flash('File saved', 'success')
+            except OSError:
+                flash('Please upload a file named: 99th_Coy_Nominal_Roll in .xlsx format', 'danger')
 
         if request.form['action'] == 'Load Excel':
             try:
