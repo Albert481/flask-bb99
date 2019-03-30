@@ -1,17 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+
+
+
+    @media screen and (max-width: 640px){
+            .exposedlinks {
+                display: none;
+            }
+
+        }
+
+        @media screen and (max-width: 320px){
+            .exposedlinks {
+                display: none;
+            }
+
+        }
+</style>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="navbar-header">
         <a class="navbar-brand" href="/">BB99</a>
     </div>
     <ul class="nav navbar-right navbar-top-links">
+
         {% if session['logged_in'] and session['role'] == 'Admin' %}
-        <li><a href="students"><i class="fa fa-users"></i> Students</a></li>
+        <li><a href="students"><i class="fa fa-users exposedlinks"></i> Students</a></li>
         {% endif %}
         {% if session['logged_in'] %}
-        <li><a href="attendance"><i class="fa fa-list-alt"></i> Attendance</a></li>
+        <li><a href="attendance"><i class="fa fa-list-alt exposedlinks"></i> Attendance</a></li>
         {% endif %}
+
         <li class="dropdown">
             {% if session['logged_in'] %}
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -22,7 +42,9 @@
                 <li><a href="admin"><i class="fa fa-gear fa-fw"></i> Admin</a>
                 </li>
                 {% endif %}
-                <li class="divider"></li>
+{#                    <li><a href="students"><i class="hiddenlinks"></i> Students</a></li>#}
+{#                    <li><a href="attendance"><i class="hiddenlinks"></i> Attendance</a></li>#}
+{#                    <li class="divider"></li>#}
                 <li><a href="logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                 </li>
             </ul>
