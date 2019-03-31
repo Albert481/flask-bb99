@@ -117,11 +117,6 @@
           opacity: 0;
         }
 
-
-        body {
-            padding-top: 60px;
-        }
-
         @media screen and (max-width: 640px){
             .center {
             top: 50%;
@@ -161,11 +156,6 @@
     {% from "includes/_formhelper.html" import render_field %}
 
     <div id="wrapper">
-
-        <!-- Navigation -->
-        <div class="container-fluid">
-            {% include 'includes/_navbar.html' %}
-        </div>
 
         {% if session['logged_in'] %}
             <div class="row">
@@ -258,9 +248,9 @@
                 iDisplayLength: 100,
                 columns: [
                 { "width": "5%"},
-                { "width": "80%" },
+                { "width": "85%" },
                 { "width": "5%" },
-                { "width": "10%" }
+                { "width": "5%" }
               ],
                 "autoWidth": false,
                 searching: false,

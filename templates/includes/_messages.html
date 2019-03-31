@@ -1,4 +1,4 @@
-<div class="container-fluid" style="margin-top: 80px;">
+<div class="container-fluid">
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
     {% for category, message in messages %}
@@ -19,7 +19,7 @@
 {% endif %}
 
 {% if msg %}
-  <div class="alert alert-success alert-dismissable">
+  <div id="successMessage" class="alert alert-success alert-dismissable">
              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
       {{msg}}</div>
 {% endif %}

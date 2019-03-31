@@ -16,9 +16,9 @@ app.secret_key = 'secret123'
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Setup Database
-app.config['MYSQL_HOST'] = 'Albert481.mysql.pythonanywhere-services.com'
-app.config['MYSQL_USER'] = 'Albert481'
-app.config['MYSQL_PASSWORD'] = 'qazwsxplm123'
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = '1234'
 app.config['MYSQL_DB'] = 'bb99'
 mysql = MySQL(app)
 
@@ -130,16 +130,20 @@ def students():
 @app.route('/attendance', methods=['GET', 'POST'])
 def attendance():
     now = datetime.datetime.now()
+    datenow = now.strftime("%d-%m-%Y")
     totalstud = []
 
     presentStrength = 0
     totalStrength = 0
 
     cur = mysql.connection.cursor()
+
+    # Admin can view ALL students and choose specific date for attendance
     if session['role'] == 'Admin':
-        cur.execute("SELECT s.student_id, s.student_class, s.student_name, s.student_squad, a.attendancy, a.date FROM students s LEFT JOIN attendance a ON s.student_id=a.student_id")
+        cur.execute("SELECT s.student_id, s.student_class, s.student_name, s.student_squad, a.attendancy, a.date FROM students s LEFT JOIN attendance a ON s.student_id=a.student_id WHERE a.date=%s", [datenow])
+    # Other users can view students assigned by their role
     else:
-        cur.execute("SELECT s.student_id, s.student_class, s.student_name, s.student_squad, a.attendancy, a.date FROM students s LEFT JOIN attendance a ON s.student_id=a.student_id WHERE s.student_squad=%s", session['role'])
+        cur.execute("SELECT s.student_id, s.student_class, s.student_name, s.student_squad, a.attendancy, a.date FROM students s LEFT JOIN attendance a ON s.student_id=a.student_id WHERE s.student_squad=%s AND a.date=%s", (session['role'], datenow))
 
     data = cur.fetchall()
 
