@@ -16,9 +16,9 @@ app.secret_key = 'secret123'
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Setup Database
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '1234'
+app.config['MYSQL_HOST'] = 'Albert481.mysql.pythonanywhere-services.com'
+app.config['MYSQL_USER'] = 'Albert481'
+app.config['MYSQL_PASSWORD'] = 'qazwsxplm123'
 app.config['MYSQL_DB'] = 'bb99'
 mysql = MySQL(app)
 
@@ -37,7 +37,6 @@ def index():
         cur = mysql.connection.cursor()
         cur.execute("SELECT * FROM users WHERE user_name=%s", [username])
         data = cur.fetchall()
-        print(data)
 
         try:
             if (username == data[0][1]) and (password == data[0][3]):
