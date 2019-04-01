@@ -98,7 +98,7 @@ def students():
 
         if request.form['action'] == 'Load Excel':
 
-            cur.execute("DELETE FROM students")
+            cur.execute("TRUNCATE TABLE students")
 
             with open('students.csv', 'r') as csv_file:
                 csv_reader = csv.reader(csv_file)
