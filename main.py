@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, session
 from flask_mysqldb import MySQL
 from wtforms import Form, SelectMultipleField, StringField, PasswordField, validators, RadioField, SelectField, ValidationError, FileField, SubmitField, TextAreaField, DateField
-import xlrd
+import csv
 import os
 from werkzeug.utils import secure_filename
 import datetime
@@ -87,49 +87,31 @@ def students():
 
 
 
-    # if request.method == 'POST':
-    #     if request.form['action'] == 'Save':
-    #         try:
-    #             f = request.files['upload']
-    #             f.save(secure_filename(f.filename))
-    #             flash('File saved', 'success')
-    #         except OSError:
-    #             flash('Please upload a file named: 99th_Coy_Nominal_Roll in .xlsx format', 'danger')
-    #
-    #     if request.form['action'] == 'Load Excel':
-    #         try:
-    #             wb = xlrd.open_workbook("99th_Coy_Nominal_Roll.xlsx")
-    #             # Read first sheet
-    #             worksheet = wb.sheet_by_index(0)
-    #             total_cols = worksheet.ncols
-    #             table = list()
-    #             record = list()
-    #             # Reads data from excel sheet
-    #             for i in range(1, worksheet.nrows):
-    #                 for j in range(total_cols):
-    #                     record.append(worksheet.cell(i, j).value)
-    #                 table.append(record)
-    #                 record = []
-    #                 i += 1
-    #             # Reads the excel and assign appropriate values
-    #             student_db = root.child('students')
-    #             student_db.delete()
-    #             for i in table:
-    #                 name = i[3]
-    #                 sclass = i[4]
-    #                 slevel = i[8]
-    #                 squad = i[7]
-    #                 student_db.push({
-    #                     'name': name,
-    #                     'sclass': sclass,
-    #                     'slevel': slevel,
-    #                     'squad': squad,
-    #                     'tempcheck': '0',
-    #                     'infraction': 0
-    #                 })
-    #             return redirect(url_for('students'))
-    #         except OSError:
-    #             flash('99th_Coy_Nominal_Roll.xlsx cannot be found', 'danger')
+    if request.method == 'POST':
+        # if request.form['action'] == 'Save':
+        #     try:
+        #         f = request.files['upload']
+        #         f.save(secure_filename(f.filename))
+        #         flash('File saved', 'success')
+        #     except OSError:
+        #         flash('Please upload a file named: 99th_Coy_Nominal_Roll in .xlsx format', 'danger')
+
+        if request.form['action'] == 'Load Excel':
+
+            cur.execute("DELETE FROM students")
+
+            with open('students.csv', 'r') as csv_file:
+                csv_reader = csv.reader(csv_file)
+
+                next(csv_reader)
+
+                for line in csv_reader:
+                    cur.execute("INSERT INTO students (student_class, student_name, student_squad) VALUES (%s, %s, %s)" , (line[0], line[1], line[2]))
+                mysql.connection.commit()
+
+            return redirect(url_for('students'))
+
+
     cur.close()
     return render_template('students.html', students=totalStud)
 
@@ -145,20 +127,28 @@ def attendance():
 
     cur = mysql.connection.cursor()
 
-    cur.execute("SELECT COUNT(*) FROM students s JOIN attendance a ON s.student_id=a.student_id WHERE a.date=%s", [datenow])
+    if session['role'] == 'Admin':
+        cur.execute("SELECT COUNT(*) FROM students s JOIN attendance a ON s.student_id=a.student_id WHERE a.date=%s", [datenow])
+    else:
+        cur.execute("SELECT COUNT(*) FROM students s JOIN attendance a ON s.student_id=a.student_id WHERE a.date=%s AND student_squad=%s", (datenow, session['role']))
 
     data = cur.fetchone()
 
     # If attendance has not been taken for DATENOW (today)
     if data[0] == 0:
-        cur.execute("SELECT student_id, student_class, student_name, student_squad FROM students")
+
+        if session['role'] == 'Admin':
+            cur.execute("SELECT student_id, student_class, student_name, student_squad FROM students")
+        else:
+            cur.execute("SELECT student_id, student_class, student_name, student_squad FROM students WHERE student_squad=%s", session['role'])
+
         data = cur.fetchall()
 
         for eachstud in data:
             # Attendance Class (studId, studClass, studName, studSquad, attendancy, date)
             findstudent = models.Attendance(eachstud[0], eachstud[1], eachstud[2], eachstud[3], 0,
                                             datenow)
-
+            totalStrength += 1
             totalstud.append(findstudent)
 
     # If atendance has already been taken for DATENOW (today)
