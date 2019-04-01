@@ -138,25 +138,47 @@ def attendance():
 
     cur = mysql.connection.cursor()
 
-    # Admin can view ALL students and choose specific date for attendance
-    if session['role'] == 'Admin':
-        cur.execute("SELECT s.student_id, s.student_class, s.student_name, s.student_squad, a.attendancy, a.date FROM students s LEFT JOIN attendance a ON s.student_id=a.student_id WHERE a.date=%s", [datenow])
-    # Other users can view students assigned by their role
+    cur.execute("SELECT COUNT(*) FROM students s JOIN attendance a ON s.student_id=a.student_id WHERE a.date=%s", [datenow])
+
+    data = cur.fetchone()
+
+    # If attendance has not been taken for DATENOW (today)
+    if data[0] == 0:
+        cur.execute("SELECT student_id, student_class, student_name, student_squad FROM students")
+        data = cur.fetchall()
+
+        for eachstud in data:
+            # Attendance Class (studId, studClass, studName, studSquad, attendancy, date)
+            findstudent = models.Attendance(eachstud[0], eachstud[1], eachstud[2], eachstud[3], 0,
+                                            datenow)
+
+            totalstud.append(findstudent)
+
+    # If atendance has already been taken for DATENOW (today)
     else:
-        cur.execute("SELECT s.student_id, s.student_class, s.student_name, s.student_squad, a.attendancy, a.date FROM students s LEFT JOIN attendance a ON s.student_id=a.student_id WHERE s.student_squad=%s AND a.date=%s", (session['role'], datenow))
+        # Admin can view ALL students and choose specific date for attendance
+        if session['role'] == 'Admin':
+            cur.execute(
+                "SELECT s.student_id, s.student_class, s.student_name, s.student_squad, a.attendancy, a.date FROM students s LEFT JOIN attendance a ON s.student_id=a.student_id WHERE a.date=%s",
+                [datenow])
+        # Other users can view students assigned by their role
+        else:
+            cur.execute(
+                "SELECT s.student_id, s.student_class, s.student_name, s.student_squad, a.attendancy, a.date FROM students s LEFT JOIN attendance a ON s.student_id=a.student_id WHERE s.student_squad=%s AND a.date=%s",
+                (session['role'], datenow))
 
-    data = cur.fetchall()
+        data = cur.fetchall()
 
-    for eachstud in data:
-        #Attendance Class (studId, studClass, studName, studSquad, attendancy, date)
-        findstudent = models.Attendance(eachstud[0], eachstud[1], eachstud[2], eachstud[3], eachstud[4], eachstud[5])
+        for eachstud in data:
+            # Attendance Class (studId, studClass, studName, studSquad, attendancy, date)
+            findstudent = models.Attendance(eachstud[0], eachstud[1], eachstud[2], eachstud[3], eachstud[4],
+                                            eachstud[5])
 
-        totalStrength += 1
-        if findstudent.get_attendancy() == 1:
-            presentStrength += 1
+            totalStrength += 1
+            if findstudent.get_attendancy() == 1:
+                presentStrength += 1
 
-        totalstud.append(findstudent)
-
+            totalstud.append(findstudent)
 
 
     if request.method == 'POST':
